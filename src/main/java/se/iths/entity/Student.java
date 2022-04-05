@@ -43,7 +43,7 @@ public class Student {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
-
+    @JsonbTransient
     public Long getId() {
         return id;
     }
