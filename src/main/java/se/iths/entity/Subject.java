@@ -4,7 +4,10 @@ import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Entity
 public class Subject {
     @Id
@@ -15,21 +18,15 @@ public class Subject {
     private String name;
 
    @ManyToMany(mappedBy = "subjects")
-    @JsonbTransient
-    private List<Student> students;
+
+    private Set<Student> students = new HashSet<>();
    @ManyToMany(mappedBy = "subjects")
-    @JsonbTransient
-    private List<Teacher> teachers;
 
-    public Subject(String name, List<Student> students, List<Teacher> teachers) {
-        this.name = name;
-        this.students = students;
-        this.teachers = teachers;
-    }
+    private Set<Teacher> teachers = new HashSet<>();
 
-    public List<Teacher> getTeachers() {
-        return teachers;
-    }
+
+
+
 
 
 
@@ -57,11 +54,21 @@ public class Subject {
         this.name = name;
     }
 
-    public List<Student> getStudents() {
+    public Set<Student> getStudents() {
         return students;
     }
 
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
 
+    public Set<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(Set<Teacher> teachers) {
+        this.teachers = teachers;
+    }
 
     @Override
     public String toString() {

@@ -10,5 +10,8 @@
         <module name="student-management-system" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="lab2jee" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
