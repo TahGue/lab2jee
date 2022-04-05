@@ -119,16 +119,18 @@ public class StudentRest {
 
 
     }
-    @Path("getbyLN-np")
+    @Path("lastname")
     @GET
-    public Response getBylastNameParameters(@QueryParam("lastName") String lastName) {
-        List<Student> result= StudentService.getBylastNameParameters(lastName);
+    public Response getByLastName(@QueryParam("lastName") String lastName) {
+        List<Student> result= StudentService.getBylastName(lastName);
         if (result.size()<=0) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("Student with lastName " + lastName + " was not found in database.").type(MediaType.TEXT_PLAIN_TYPE).build());
         }
         return  Response.ok(result).build() ;
     }
+
+
 
 
 
