@@ -14,7 +14,7 @@ import java.util.List;
 @Path("/subject")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class Subject2Rest {
+public class   Subject2Rest {
 
     SubjectService subjectService;
     StudentService studentService;

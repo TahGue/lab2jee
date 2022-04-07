@@ -30,7 +30,7 @@ public class Teacher {
     }
 
    public void addSubject(Subject subject) {
-        subject.addTeacher(this);
+        subjects.add(subject);
     }
     public void removeSubject(Subject subject) {
         subject.removeTeacher(this);

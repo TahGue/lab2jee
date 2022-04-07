@@ -67,8 +67,19 @@ public class SubjectService {
 
     public void addTeacherSubject(Long id, Subject subject) {
         Teacher teacher1 = entityManager.find(Teacher.class, id);
-        teacher1.addSubject(entityManager.find(Subject.class, subject));
-        entityManager.merge(teacher1); }
+        teacher1.addSubject(entityManager.find(Subject.class, subject.getId()));
+        subject.addTeacher(teacher1);
+        entityManager.merge(teacher1);
+        entityManager.merge(subject);
+    }
+    public void addStudentSubject(Long id, Subject subject) {
+        Student student1 = entityManager.find(Student.class, id);
+        student1.addSubject(entityManager.find(Subject.class, subject.getId()));
+        subject.addStudent(student1);
+        entityManager.merge(student1);
+        entityManager.merge(subject);
+
+    }
 
     public void deleteTeacherSubject(Long id, Subject subject) { Teacher teacher1 = entityManager.find(Teacher.class, id);
         teacher1.addSubject(entityManager.find(Subject.class, subject));
@@ -83,14 +94,7 @@ public class SubjectService {
         Student student1 = entityManager.find(Student.class, id);
         return student1.getSubjects();
     }
-    public void addStudentSubject(Long id, Subject subject) {
-        Student student1 = entityManager.find(Student.class, id);
-        student1.addSubject(entityManager.find(Subject.class, subject.getId()));
-        subject.addStudent(student1);
-        entityManager.merge(student1);
-        entityManager.merge(subject);
 
-    }
 
     public void deleteStudentSubject(Long id, Subject subject) { Student student1 = entityManager.find(Student.class, id);
         student1.addSubject(entityManager.find(Subject.class, subject));
@@ -98,6 +102,8 @@ public class SubjectService {
 
     public List<Subject> StudentSubjects(Long id) { Student student1 = entityManager.find(Student.class, id);
         return student1.getSubjects(); }
+    public List<Subject> TeacherSubjects(Long id) { Teacher teacher1 = entityManager.find(Teacher.class, id);
+        return teacher1.getSubjects(); }
     }
 
 

@@ -20,10 +20,10 @@ public class Subject {
 
 
     @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-
+    @JsonbTransient
     private List<Student> students = new ArrayList<>();
     @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-
+    @JsonbTransient
     private List<Teacher> teachers = new ArrayList<>();
 
     public void addStudent(Student student) {
@@ -33,17 +33,17 @@ public class Subject {
 
 
     public void removeStudent(Student student) {
-        student.removeSubject(this);
+        this.students.remove(student);
 
     }
 
     public void addTeacher(Teacher teacher) {
-        teacher.addSubject(this);
+        this.teachers.add(teacher);
 
     }
 
     public void removeTeacher(Teacher teacher) {
-        teacher.removeSubject(this);
+        this.teachers.remove(teacher);
     }
 
 

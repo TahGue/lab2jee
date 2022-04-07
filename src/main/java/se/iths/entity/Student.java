@@ -34,12 +34,6 @@ public class Student {
 
     }
 
-    public Student(String firstName, String lastName, String email, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
 
     public void addSubject(Subject subject) {
         subjects.add(subject);

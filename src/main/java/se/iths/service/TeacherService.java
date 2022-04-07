@@ -1,6 +1,8 @@
 package se.iths.service;
 
 
+import se.iths.entity.Student;
+import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
 
 import javax.persistence.EntityManager;
@@ -28,6 +30,12 @@ public class TeacherService {
 
     public void updateTeacher(Long id, Teacher teacher) {
         entityManager.merge(teacher);
+    }
+
+    public void addSubjectToTeacher(Long teacherId, Long subjectId) {
+        Teacher teacher = entityManager.find(Teacher.class, teacherId);
+        Subject subject = entityManager.find(Subject.class, subjectId);
+        teacher.getSubjects().add(subject);
     }
 
     public void deleteTeacher(Long id) {
