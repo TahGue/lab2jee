@@ -1,9 +1,9 @@
 package se.iths.entity;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,17 +17,20 @@ public class Subject {
     @NotNull
     private String name;
 
-   @ManyToMany(mappedBy = "subjects")
+   
+@ManyToMany (mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+private List<Student> students = new ArrayList<>();
+@ManyToMany (mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+private List<Teacher> teachers = new ArrayList<>();
 
-    private Set<Student> students = new HashSet<>();
-   @ManyToMany(mappedBy = "subjects")
-
-    private Set<Teacher> teachers = new HashSet<>();
-
-
-
-
-
+public void addStudenet(Student student){
+    students.add(student);
+  student.getSubjects().add(this);
+}
+public void addTeacher(Teacher teacher){
+    teachers.add(teacher);
+    teacher.getSubjects().add(this);
+}
 
 
     public Subject() {
@@ -54,29 +57,31 @@ public class Subject {
         this.name = name;
     }
 
-    public Set<Student> getStudents() {
+
+    public List<Student> getStudents() {
         return students;
     }
 
-    public void setStudents(Set<Student> students) {
+    public void setStudents(List<Student> students) {
         this.students = students;
     }
 
-    public Set<Teacher> getTeachers() {
+    public List<Teacher> getTeachers() {
         return teachers;
     }
 
-    public void setTeachers(Set<Teacher> teachers) {
+    public void setTeachers(List<Teacher> teachers) {
         this.teachers = teachers;
     }
+
+   
 
     @Override
     public String toString() {
         return "Subject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", students=" + students +
-                ", teachers=" + teachers +
+                
                 '}';
     }
 }

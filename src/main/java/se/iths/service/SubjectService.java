@@ -1,6 +1,7 @@
 package se.iths.service;
 
 
+import se.iths.entity.Student;
 import se.iths.entity.Subject;
 
 import javax.persistence.EntityManager;
@@ -27,7 +28,7 @@ public class SubjectService {
     }
 
     public List<Subject> getAllSubject() {
-        return entityManager.createQuery("SELECT i from Subject i", Subject.class).getResultList();
+        return entityManager.createQuery("SELECT i from Subject i", Subject.class).getResultList( );
     }
 
     public void deleteSubject(Long id) {
