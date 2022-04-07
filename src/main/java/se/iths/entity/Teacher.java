@@ -1,6 +1,7 @@
 package se.iths.entity;
 
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -25,19 +26,18 @@ public class Teacher {
     private List<Subject> subjects = new ArrayList<>();
 
 
-
-
-
-      
-
-
     public Teacher() {
     }
 
-   
+   public void addSubject(Subject subject) {
+        subject.addTeacher(this);
+    }
+    public void removeSubject(Subject subject) {
+        subject.removeTeacher(this);
+    }
 
-    
 
+    @JsonbTransient
     public Long getId() {
         return id;
     }
@@ -66,8 +66,8 @@ public class Teacher {
         return subjects;
     }
 
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
+    public void setSubject(Subject subject) {
+        this.subjects.add(subject);
     }
 
     @Override
@@ -76,6 +76,7 @@ public class Teacher {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", subject=" + subjects +
                 '}';
     }
 }

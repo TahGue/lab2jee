@@ -14,46 +14,30 @@ public class StudentService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void createStudent(Student student) {
+    public void addStudent(Student student) {
         entityManager.persist(student);
     }
 
-    public void updateStudent(Student student) {
-        entityManager.merge(student);
+    public List<Student> getStudents() {
+        return entityManager.createQuery("SELECT s FROM Student s", Student.class).getResultList();
     }
 
-    public Student findStudentById(Long id) {
+    public Student getStudent(Long id) {
         return entityManager.find(Student.class, id);
     }
 
-    public List<Student> getAllStudents() {
-        return entityManager.createQuery("SELECT i from Student i", Student.class).getResultList();
+    public void addSubjectToStudent(Long studentId, Long subjectId) {
+        Student student = entityManager.find(Student.class, studentId);
+        Subject subject = entityManager.find(Subject.class, subjectId);
+        student.getSubjects().add(subject);
     }
 
-    public void deleteStudent(Long id) {
-        Student foundItem = entityManager.find(Student.class, id);
-        entityManager.remove(foundItem);
-    }
+    public void deleteStudent(Long id) { entityManager.remove(entityManager.find(Student.class, id)); }
 
-    public Student updatePhoneNumber(Long id, String phoneNumber) {
-        Student foundItem = entityManager.find(Student.class, id);
-        foundItem.setPhoneNumber(phoneNumber);
-        return foundItem;
-    }
-
-    public Subject addSubject(Long subjectId, Long studentId) {
-        {
-            Student student = entityManager.find(Student.class, studentId);
-            Subject subject = entityManager.find(Subject.class, subjectId);
-            student.getSubjects().add(subject);
-            return subject;
-        }
-    }
-    public List<Student> getBylastName(String lastName) {
-        String query = "SELECT i FROM Student i WHERE i.lastName = :lastName";
-        return entityManager.createQuery(query, Student.class).setParameter("lastName", lastName).getResultList();
+    public void updateStudent(Long id, Student student) { entityManager.merge(student); }
     }
 
 
 
-}
+
+
