@@ -14,24 +14,23 @@ public class TeacherService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void createTeacher(Teacher teacher) {
+    public void addTeacher(Teacher teacher) {
         entityManager.persist(teacher);
     }
 
-    public void updateTeacher(Teacher teacher) {
-        entityManager.merge(teacher);
+    public List<Teacher> getAllTeachers() {
+        return entityManager.createQuery("SELECT t FROM Teacher t", Teacher.class).getResultList();
     }
 
-    public Teacher findTeacherById(Long id) {
+    public Teacher getTeacherById(Long id) {
         return entityManager.find(Teacher.class, id);
     }
 
-    public List<Teacher> getAllTeacher() {
-        return entityManager.createQuery("SELECT i from Teacher i", Teacher.class).getResultList();
+    public void updateTeacher(Long id, Teacher teacher) {
+        entityManager.merge(teacher);
     }
 
     public void deleteTeacher(Long id) {
-        Teacher foundTeacher = entityManager.find(Teacher.class, id);
-        entityManager.remove(foundTeacher);
+        entityManager.remove(getTeacherById(id));
     }
 }

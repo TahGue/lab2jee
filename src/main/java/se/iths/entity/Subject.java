@@ -1,5 +1,6 @@
 package se.iths.entity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -17,20 +18,33 @@ public class Subject {
     @NotNull
     private String name;
 
-   
-@ManyToMany (mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-private List<Student> students = new ArrayList<>();
-@ManyToMany (mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-private List<Teacher> teachers = new ArrayList<>();
 
-public void addStudenet(Student student){
-    students.add(student);
-  student.getSubjects().add(this);
-}
-public void addTeacher(Teacher teacher){
-    teachers.add(teacher);
-    teacher.getSubjects().add(this);
-}
+    @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+
+    private List<Student> students = new ArrayList<>();
+    @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+
+    private List<Teacher> teachers = new ArrayList<>();
+
+    public void addStudent(Student student) {
+        this.students.add(student);
+    }
+
+
+
+    public void removeStudent(Student student) {
+        student.removeSubject(this);
+
+    }
+
+    public void addTeacher(Teacher teacher) {
+        teacher.addSubject(this);
+
+    }
+
+    public void removeTeacher(Teacher teacher) {
+        teacher.removeSubject(this);
+    }
 
 
     public Subject() {
@@ -62,29 +76,26 @@ public void addTeacher(Teacher teacher){
         return students;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setStudent(Student student) {
+        this.students.add(student);
     }
 
-    public List<Teacher> getTeachers() {
+    public List<Teacher> getTeacher() {
         return teachers;
     }
 
-    public void setTeachers(List<Teacher> teachers) {
-        this.teachers = teachers;
+    public void seTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
     }
-
-   
 
     @Override
     public String toString() {
         return "Subject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                
+                ", student=" + students +
+                ", teacher=" + teachers +
                 '}';
     }
 }
-
-
 
