@@ -20,10 +20,10 @@ public class Subject {
 
 
     @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonbTransient
+
     private List<Student> students = new ArrayList<>();
     @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonbTransient
+
     private List<Teacher> teachers = new ArrayList<>();
 
     public void addStudent(Student student) {
@@ -54,7 +54,7 @@ public class Subject {
     public Subject(String name) {
         this.name = name;
     }
-
+    @JsonbTransient
     public Long getId() {
         return id;
     }

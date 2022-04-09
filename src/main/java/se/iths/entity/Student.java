@@ -25,7 +25,7 @@ public class Student {
     private String phoneNumber;
     
     @ManyToMany
-
+    @JsonbTransient
     private List<Subject> subjects = new ArrayList<>();
 
 
@@ -41,7 +41,7 @@ public class Student {
     public void removeSubject(Subject subject) {
         subject.removeStudent(this);
     }
-    @JsonbTransient
+
     public Long getId() {
         return id;
     }

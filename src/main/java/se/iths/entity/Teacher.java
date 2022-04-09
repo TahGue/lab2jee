@@ -23,6 +23,7 @@ public class Teacher {
 
   
 @ManyToMany
+@JsonbTransient
     private List<Subject> subjects = new ArrayList<>();
 
 
@@ -37,7 +38,7 @@ public class Teacher {
     }
 
 
-    @JsonbTransient
+
     public Long getId() {
         return id;
     }
