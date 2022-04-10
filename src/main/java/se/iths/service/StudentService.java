@@ -18,12 +18,16 @@ public class StudentService {
         entityManager.persist(student);
     }
 
-    public List<Student> getStudents() {
+    public List<Student> getAllStudents() {
         return entityManager.createQuery("SELECT s FROM Student s", Student.class).getResultList();
     }
 
-    public Student getStudent(Long id) {
+    public Student getStudentById(Long id) {
         return entityManager.find(Student.class, id);
+    }
+
+    public void updateStudent(Long id, Student student) {
+        entityManager.merge(student);
     }
 
     public void addSubjectToStudent(Long studentId, Long subjectId) {
@@ -32,10 +36,11 @@ public class StudentService {
         student.getSubjects().add(subject);
     }
 
-    public void deleteStudent(Long id) { entityManager.remove(entityManager.find(Student.class, id)); }
-
-    public void updateStudent(Long id, Student student) { entityManager.merge(student); }
+    public void deleteStudent(Long id) {
+        entityManager.remove(entityManager.find(Student.class, id));
     }
+}
+
 
 
 

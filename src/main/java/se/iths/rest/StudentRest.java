@@ -28,13 +28,18 @@ public class StudentRest {
 
     @GET
     public List<Student> getAllStudents() {
-        return studentService.getStudents();
+
+        return studentService.getAllStudents();
     }
 
     @GET
     @Path("/{id}")
     public Student getStudent(@PathParam("id") Long id) {
-        return studentService.getStudent(id);
+        if (id == null) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        return studentService.getStudentById(id);
+       
     }
 
     @POST
@@ -42,6 +47,16 @@ public class StudentRest {
         try {
             studentService.addStudent(student);
             return Response.status(Response.Status.CREATED).build();
+        } catch (ConstraintViolationException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+    @PUT
+    @Path("/{id}")
+    public Response updateStudent(@PathParam("id") Long id, Student student) {
+        try {
+            studentService.updateStudent(id, student);
+            return Response.status(Response.Status.OK).build();
         } catch (ConstraintViolationException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -58,21 +73,16 @@ public class StudentRest {
         }
     }
 
-    @PUT
-    @Path("/{id}")
-    public Response updateStudent(@PathParam("id") Long id, Student student) {
-        try {
-            studentService.updateStudent(id, student);
-            return Response.status(Response.Status.OK).build();
-        } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
+
 
     @GET
     @Path("{id}/subjects")
     public List<Subject> getStudentSubjects(@PathParam("id") Long id) {
-        return subjectService.StudentSubjects(id);
+            if (id == null) {
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            }
+            return subjectService.StudentSubjects(id);
+        
     }
 
     @POST

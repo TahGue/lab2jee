@@ -22,6 +22,7 @@ public class SubjectService {
     }
 
     public Subject getSubject(Long id) {
+
         return entityManager.find(Subject.class, id);
     }
 
@@ -65,13 +66,14 @@ public class SubjectService {
 
     public void delete(Long id) { entityManager.remove(getSubject(id)); }
 
-    public void addTeacherSubject(Long id, Subject subject) {
+     public void addTeacherSubject(Long id, Subject subject) {
         Teacher teacher1 = entityManager.find(Teacher.class, id);
         teacher1.addSubject(entityManager.find(Subject.class, subject.getId()));
         subject.addTeacher(teacher1);
-        entityManager.merge(teacher1);
         entityManager.merge(subject);
-    }
+        entityManager.merge(teacher1);
+     }
+
     public void addStudentSubject(Long id, Subject subject) {
         Student student1 = entityManager.find(Student.class, id);
         student1.addSubject(entityManager.find(Subject.class, subject.getId()));

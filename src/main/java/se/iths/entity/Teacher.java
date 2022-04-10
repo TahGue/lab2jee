@@ -30,7 +30,7 @@ public class Teacher {
     public Teacher() {
     }
 
-   public void addSubject(Subject subject) {
+    public void addSubject(Subject subject) {
         subjects.add(subject);
     }
     public void removeSubject(Subject subject) {
@@ -77,7 +77,7 @@ public class Teacher {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", subject=" + subjects +
+                ", subjects=" + subjects +
                 '}';
     }
 }
