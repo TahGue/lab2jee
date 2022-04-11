@@ -1,6 +1,7 @@
 package se.iths.service;
 
 
+
 import se.iths.entity.Student;
 import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
@@ -29,6 +30,7 @@ public class TeacherService {
     }
 
     public void updateTeacher(Long id, Teacher teacher) {
+
         entityManager.merge(teacher);
     }
 
@@ -39,6 +41,7 @@ public class TeacherService {
     }
 
     public void deleteTeacher(Long id) {
-        entityManager.remove(getTeacherById(id));
+
+        entityManager.remove(entityManager.find(Teacher.class, id));
     }
 }

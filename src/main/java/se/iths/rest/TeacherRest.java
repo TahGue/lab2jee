@@ -8,6 +8,7 @@ import se.iths.service.SubjectService;
 import se.iths.service.TeacherService;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,20 +38,30 @@ public class TeacherRest {
     @GET
     @Path("{id}")
     public Teacher getTeacher(@PathParam("id") Long id) {
+
         return teacherService.getTeacherById(  id);
     }
 
     @POST
     public Response addTeacher(Teacher teacher) {
-        teacherService.addTeacher(teacher);
-        return Response.status(Response.Status.CREATED).entity(teacher).build();
+        try {
+            teacherService.addTeacher(teacher);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (ConstraintViolationException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
     @PUT
     @Path("{id}")
     public Response updateTeacher(@PathParam("id") Long id, Teacher teacher) {
-        teacherService.updateTeacher(id, teacher);
-        return Response.status(Response.Status.OK).entity(teacher).build();
+        try {
+            teacherService.updateTeacher(id, teacher);
+            return Response.status(Response.Status.OK).build();
+    } catch (
+    ConstraintViolationException e) {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
     }
 
     @DELETE
@@ -63,7 +74,10 @@ public class TeacherRest {
     @GET
     @Path("{id}/subjects")
     public List<Subject> getTeacherSubjects(@PathParam("id") Long id) {
-        return subjectService.getTeacherSubjects(id);
+       if (id == null) {
+           throw new WebApplicationException(Response.Status.BAD_REQUEST);
+       }
+       return subjectService.getTeacherSubjects(id);
     }
 
     @POST
