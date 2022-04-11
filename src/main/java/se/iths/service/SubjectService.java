@@ -65,13 +65,8 @@ public class SubjectService {
 
     public void delete(Long id) { entityManager.remove(getSubject(id)); }
 
-    public void addTeacherSubject(Long id, Subject subject) {
-        Teacher teacher1 = entityManager.find(Teacher.class, id);
-        teacher1.addSubject(entityManager.find(Subject.class, subject.getId()));
-        subject.addTeacher(teacher1);
-        entityManager.merge(teacher1);
-        entityManager.merge(subject);
-    }
+
+
     public void addStudentSubject(Long id, Subject subject) {
         Student student1 = entityManager.find(Student.class, id);
         student1.addSubject(entityManager.find(Subject.class, subject.getId()));
@@ -81,9 +76,28 @@ public class SubjectService {
 
     }
 
-    public void deleteTeacherSubject(Long id, Subject subject) { Teacher teacher1 = entityManager.find(Teacher.class, id);
-        teacher1.addSubject(entityManager.find(Subject.class, subject));
-        entityManager.merge(teacher1); }
+    public void addTeacherSubject(Long id, Subject subject) {
+        Teacher teacher1 = entityManager.find(Teacher.class, id);
+        teacher1.addSubject(entityManager.find(Subject.class, subject.getId()));
+        subject.addTeacher(teacher1);
+        entityManager.merge(teacher1);
+        entityManager.merge(subject);
+
+    }
+
+
+
+    public void deleteTeacherSubject(Long id, Subject subject) {
+        Teacher teacher1 = entityManager.find(Teacher.class, id);
+        teacher1.removeSubject(entityManager.find(Subject.class, subject.getId()));
+        subject.removeTeacher(teacher1);
+        entityManager.merge(teacher1);
+        entityManager.merge(subject);
+
+    }
+
+
+
 
     public List<Subject> getSubjectsByTeacherId(Long id) {
         Teacher teacher1 = entityManager.find(Teacher.class, id);
@@ -104,7 +118,9 @@ public class SubjectService {
         return student1.getSubjects(); }
     public List<Subject> TeacherSubjects(Long id) { Teacher teacher1 = entityManager.find(Teacher.class, id);
         return teacher1.getSubjects(); }
-    }
+
+
+}
 
 
 
