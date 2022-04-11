@@ -30,11 +30,8 @@ public class StudentService {
         entityManager.merge(student);
     }
 
-    public void addSubjectToStudent(Long studentId, Long subjectId) {
-        Student student = entityManager.find(Student.class, studentId);
-        Subject subject = entityManager.find(Subject.class, subjectId);
-        student.getSubjects().add(subject);
-    }
+
+
 
     public void deleteStudent(Long id) {
         entityManager.remove(entityManager.find(Student.class, id));

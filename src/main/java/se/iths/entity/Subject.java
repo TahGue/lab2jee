@@ -1,13 +1,11 @@
 package se.iths.entity;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import static javax.persistence.CascadeType.*;
 
 @Entity
 public class Subject {
@@ -19,10 +17,10 @@ public class Subject {
     private String name;
 
 
-    @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "subjects", cascade =  ALL)
 
     private List<Student> students = new ArrayList<>();
-    @ManyToMany(mappedBy = "subjects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "subjects", cascade = ALL)
 
     private List<Teacher> teachers = new ArrayList<>();
 
@@ -97,5 +95,7 @@ public class Subject {
                 ", teacher=" + teachers +
                 '}';
     }
+
+
 }
 

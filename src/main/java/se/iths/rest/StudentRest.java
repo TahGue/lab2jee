@@ -4,6 +4,7 @@ import se.iths.entity.Student;
 import se.iths.entity.Subject;
 import se.iths.service.StudentService;
 import se.iths.service.SubjectService;
+import se.iths.util.Err;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
@@ -32,14 +33,22 @@ public class StudentRest {
         return studentService.getAllStudents();
     }
 
-    @GET
-    @Path("/{id}")
-    public Student getStudent(@PathParam("id") Long id) {
-        if (id == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+
+
+    @GET @Path("/{id}") public Response getStudent(@PathParam("id") Long id)  {
+        Student student = studentService.getStudentById(id);
+        if (student == null) {
+            Err err = new Err ("No student with id " + id + " found");
+            return  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(err)
+                    .build();
         }
-        return studentService.getStudentById(id);
-       
+            return Response .status(Response.Status.OK)
+                     .entity(student)
+                     .build();
+
+
     }
 
     @POST
@@ -85,9 +94,10 @@ public class StudentRest {
         
     }
 
-    @POST
+    @PATCH
     @Path("{id}/subjects")
     public Response addStudentSubject(@PathParam("id") Long id, Subject subject) {
+
         subjectService.addStudentSubject(id, subject);
         return Response.status(Response.Status.CREATED).entity(subject).build();
     }

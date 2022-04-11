@@ -4,8 +4,6 @@ package se.iths.entity;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,14 +22,14 @@ public class Teacher {
   
 @ManyToMany
 @JsonbTransient
-    private List<Subject> subjects = new ArrayList<>();
+private List<Subject> subjects;
 
 
     public Teacher() {
     }
 
     public void addSubject(Subject subject) {
-        subjects.add(subject);
+        this.subjects.add(subject);
     }
     public void removeSubject(Subject subject) {
         subject.removeTeacher(this);

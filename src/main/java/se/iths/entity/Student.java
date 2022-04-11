@@ -1,13 +1,11 @@
 package se.iths.entity;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class Student {
@@ -26,7 +24,7 @@ public class Student {
     
     @ManyToMany
     @JsonbTransient
-    private List<Subject> subjects = new ArrayList<>();
+    private List<Subject> subjects;
 
 
 
@@ -36,7 +34,7 @@ public class Student {
 
 
     public void addSubject(Subject subject) {
-        subjects.add(subject);
+        this.subjects.add(subject);
     }
     public void removeSubject(Subject subject) {
         subject.removeStudent(this);

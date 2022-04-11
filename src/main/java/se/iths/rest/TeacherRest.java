@@ -3,7 +3,6 @@ package se.iths.rest;
 
 import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
-
 import se.iths.service.SubjectService;
 import se.iths.service.TeacherService;
 
@@ -80,7 +79,7 @@ public class TeacherRest {
        return subjectService.getTeacherSubjects(id);
     }
 
-    @POST
+    @PATCH
     @Path("{id}/subjects")
     public Response addTeacherSubject(@PathParam("id") Long id, Subject subject) {
         subjectService.addTeacherSubject(id, subject);
