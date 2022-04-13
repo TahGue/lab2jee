@@ -1,9 +1,11 @@
 package se.iths.entity;
 
+
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
 
 @Entity
 public class Teacher {
@@ -17,21 +19,23 @@ public class Teacher {
     @NotNull
     private String lastName;
 
-   @ManyToMany(cascade = CascadeType.PERSIST)
-   @JoinTable(name = "teacher_subject",
-           joinColumns = @JoinColumn(name = "teacher_id"),
-           inverseJoinColumns = @JoinColumn(name = "subject_id"))
-   @JsonbTransient
-   private List<Subject> subjects;
+  
+@ManyToMany
+@JsonbTransient
+private List<Subject> subjects;
 
-    public Teacher(String firstName, String lastName, List<Subject> subjects) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.subjects = subjects;
-    }
 
     public Teacher() {
     }
+
+    public void addSubject(Subject subject) {
+        this.subjects.add(subject);
+    }
+    public void removeSubject(Subject subject) {
+        subject.removeTeacher(this);
+    }
+
+
 
     public Long getId() {
         return id;
@@ -56,13 +60,13 @@ public class Teacher {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+    
     public List<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
+    public void setSubject(Subject subject) {
+        this.subjects.add(subject);
     }
 
     @Override

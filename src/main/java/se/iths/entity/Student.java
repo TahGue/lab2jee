@@ -1,11 +1,11 @@
 package se.iths.entity;
 
-import java.util.List;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class Student {
@@ -21,11 +21,9 @@ public class Student {
     @Column (unique = true)
     private String email;
     private String phoneNumber;
-
-    @ManyToMany(  cascade = CascadeType.ALL)
-    @JoinTable(name = "student_subject",
-            joinColumns = @JoinColumn(name = "student_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
+    
+    @ManyToMany
+    @JsonbTransient
     private List<Subject> subjects;
 
 
@@ -35,15 +33,13 @@ public class Student {
     }
 
 
-
-
-    public Student(String firstName, String lastName, String email, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+    public void addSubject(Subject subject) {
+        this.subjects.add(subject);
     }
-    @JsonbTransient
+    public void removeSubject(Subject subject) {
+        subject.removeStudent(this);
+    }
+
     public Long getId() {
         return id;
     }
@@ -75,17 +71,28 @@ public class Student {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
     public List<Subject> getSubjects() {
         return subjects;
     }
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
-    }
-    @Override
-    public String toString() {
-        return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", subjects=" + subjects + "]";
+
+    public void setSubject(Subject subject) {
+        this.subjects.add(subject);
     }
 
+
+
+   @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", subject=" + subjects +
+                '}';
+    }
 
 
 

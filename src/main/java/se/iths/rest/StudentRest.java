@@ -1,7 +1,10 @@
 package se.iths.rest;
 
 import se.iths.entity.Student;
+import se.iths.entity.Subject;
 import se.iths.service.StudentService;
+import se.iths.service.SubjectService;
+import se.iths.util.Err;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
@@ -15,123 +18,139 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class StudentRest {
 
-    @Inject
-    StudentService StudentService;
+    StudentService studentService;
+    SubjectService subjectService;
 
-    @Path("")
+    @Inject
+    public StudentRest(StudentService studentService, SubjectService subjectService) {
+        this.studentService = studentService;
+        this.subjectService = subjectService;
+    }
+
+    @GET
+    public List<Student> getAllStudents() {
+        List<Student> foundStudent = studentService.getAllStudents();
+        if (foundStudent == null) {
+
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("The list of Student is empty").build());
+        }
+        return (List<Student>) Response.ok(foundStudent).build();
+
+    }
+
+
+    @GET
+    @Path("/{id}")
+    public Response getStudent(@PathParam("id") Long id) {
+        Student student = studentService.getStudentById(id);
+        if (student == null) {
+            Err err = new Err("No student with id " + id + " found");
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(err)
+                    .build();
+        }
+        return Response.status(Response.Status.OK)
+                .entity(student)
+                .build();
+
+
+    }
+
     @POST
-    public Response createStudent(Student student) {
+    public Response addStudent(Student student) {
         try {
-            StudentService.createStudent(student);
+            studentService.addStudent(student);
 
             return Response.ok(student).build();
-        }
-
-
-        catch ( ConstraintViolationException error){
+        } catch (ConstraintViolationException error) {
+            Err err = new Err("Student name is required");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity  ( "Insert a name").type(MediaType.TEXT_PLAIN_TYPE).build());
-        }
-
-        catch (Exception error) {
+                    .entity(err).build());
+        } catch (Exception error) {
+            Err err = new Err("Email is used");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("email is  used" ).type(MediaType.TEXT_PLAIN_TYPE).build());
+                    .entity(err).build());
 
 
         }
     }
 
-    @Path("")
     @PUT
-    public Response updateStudent(Student student) {
-        StudentService.updateStudent(student);
-        return Response.ok(student).build();
-    }
-
-    @Path("{id}")
-    @GET
-    public Response findStudentById(@PathParam("id") Long id) {
-        Student foundStudent = StudentService.findStudentById(id);
-
-        if (foundStudent == null) {
-
+    @Path("/{id}")
+    public Response updateStudent(@PathParam("id") Long id, Student student) {
+        try {
+            studentService.updateStudent(id, student);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception error) {
+            Err err = new Err("No student with id " + id + " found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Student with ID " + id + " was not found in database.").type(MediaType.TEXT_PLAIN_TYPE).build());
+                    .entity(err).build());
         }
-        return Response.ok(foundStudent).build();
     }
 
-    @Path("query")
-    @GET
-    public Response getAllStudent(@QueryParam("student") String student) {
-
-
-
-        String responseString = "Here is the list of  student  " + student;
-        return Response.ok(responseString).type(MediaType.TEXT_PLAIN_TYPE).build();
-
-
-    }
-
-
-    @Path("")
-    @GET
-    public Response getAllStudents() {
-        List<Student> foundStudent = StudentService.getAllStudents();
-        if (foundStudent == null) {
-
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("The list of Student is empty").type(MediaType.TEXT_PLAIN_TYPE).build());
-        }
-            return Response.ok(foundStudent).build();
-
-        }
-
-    @Path("{id}")
     @DELETE
+    @Path("/{id}")
     public Response deleteStudent(@PathParam("id") Long id) {
-
-        Student foundStudent = StudentService.findStudentById(id);
-
-        if (foundStudent == null) {
-
+        try {
+            studentService.deleteStudent(id);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception error) {
+            Err err = new Err("Student name is required");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Student with ID " + id + " was not found in database.").type(MediaType.TEXT_PLAIN_TYPE).build());
+                    .entity(err).build());
         }
-        StudentService.deleteStudent(id);
-        return Response.ok().build();
     }
 
-    @Path("{id}")
-    @PATCH
-    public Response updatePhoneNumber(@PathParam("id") Long id, Student student) {
 
-
-        Student foundStudent = StudentService.findStudentById(id);
-
-        if (foundStudent == null) {
-
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Student with ID " + id + " was not found in database.").type(MediaType.TEXT_PLAIN_TYPE).build());
-        }
-        Student updatedStudent = StudentService.updatePhoneNumber(id, student.getPhoneNumber());
-        return Response.ok(updatedStudent).build();
-
-
-    }
-    @Path("lastname")
     @GET
-    public Response getByLastName(@QueryParam("lastName") String lastName) {
-        List<Student> result= StudentService.getBylastName(lastName);
-        if (result.size()<=0) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Student with lastName " + lastName + " was not found in database.").type(MediaType.TEXT_PLAIN_TYPE).build());
+    @Path("{id}/subjects")
+    public List<Subject> getStudentSubjects(@PathParam("id") Long id) {
+        if (id == null) {
+            Err err = new Err("No student with id " + id + " found ");
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(err).build());
         }
-        return  Response.ok(result).build() ;
+        return subjectService.StudentSubjects(id);
+
     }
 
+    @PATCH
+    @Path("{studentId}/{subjectId}")
+    public Response addStudentSubject(@PathParam("studentId") Long studentId, @PathParam("subjectId") Long subjectId) {
+        try {
+            subjectService.addStudentSubject(studentId, subjectId);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception error) {
+            Err err = new Err("No  id  found ");
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity(err).build());
 
+        }
 
+    }
 
+    @DELETE
+    @Path("{studentId}/{subjectId}")
+    public Response deleteStudentSubject(@PathParam("studentId") Long studentId, @PathParam("subjectId") Long subjectId) {
+        try {
+            subjectService.deleteStudentSubject(studentId, subjectId);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception error) {
+            Err err = new Err("No  id  found ");
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity(err).build());
+        }
+    }
 
 }
+
+
+
+
+
+
+
+
+
+

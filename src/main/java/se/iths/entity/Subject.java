@@ -1,10 +1,12 @@
 package se.iths.entity;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+
+import static javax.persistence.CascadeType.*;
+
 @Entity
 public class Subject {
     @Id
@@ -14,23 +16,33 @@ public class Subject {
     @NotNull
     private String name;
 
-   @ManyToMany(mappedBy = "subjects")
-    @JsonbTransient
-    private List<Student> students;
-   @ManyToMany(mappedBy = "subjects")
-    @JsonbTransient
-    private List<Teacher> teachers;
 
-    public Subject(String name, List<Student> students, List<Teacher> teachers) {
-        this.name = name;
-        this.students = students;
-        this.teachers = teachers;
+    @ManyToMany(mappedBy = "subjects", cascade =  ALL)
+
+    private List<Student> students = new ArrayList<>();
+    @ManyToMany(mappedBy = "subjects", cascade = ALL)
+
+    private List<Teacher> teachers = new ArrayList<>();
+
+    public void addStudent(Student student) {
+        this.students.add(student);
     }
 
-    public List<Teacher> getTeachers() {
-        return teachers;
+
+
+    public void removeStudent(Student student) {
+        this.students.remove(student);
+
     }
 
+    public void addTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
+
+    }
+
+    public void removeTeacher(Teacher teacher) {
+        this.teachers.remove(teacher);
+    }
 
 
     public Subject() {
@@ -57,22 +69,33 @@ public class Subject {
         this.name = name;
     }
 
+
     public List<Student> getStudents() {
         return students;
     }
 
+    public void setStudent(Student student) {
+        this.students.add(student);
+    }
 
+    public List<Teacher> getTeacher() {
+        return teachers;
+    }
+
+    public void seTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
+    }
 
     @Override
     public String toString() {
         return "Subject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", students=" + students +
-                ", teachers=" + teachers +
+                ", student=" + students +
+                ", teacher=" + teachers +
                 '}';
     }
+
+
 }
-
-
 
