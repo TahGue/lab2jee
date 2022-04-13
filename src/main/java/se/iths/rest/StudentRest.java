@@ -65,11 +65,13 @@ public class StudentRest {
 
             return Response.ok(student).build();
         } catch (ConstraintViolationException error) {
+            Err err = new Err("Student name is required");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Insert a name").build());
+                    .entity(err).build());
         } catch (Exception error) {
+            Err err = new Err("Email is used");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Email is used").build());
+                    .entity(err).build());
 
 
         }
@@ -82,6 +84,7 @@ public class StudentRest {
             studentService.updateStudent(id, student);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("No student with id " + id + " found ").build());
         }
@@ -94,8 +97,9 @@ public class StudentRest {
             studentService.deleteStudent(id);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+            Err err = new Err("Student name is required");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No student with id " + id + " found ").build());
+                    .entity(err).build());
         }
     }
 
@@ -104,7 +108,8 @@ public class StudentRest {
     @Path("{id}/subjects")
     public List<Subject> getStudentSubjects(@PathParam("id") Long id) {
         if (id == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            Err err = new Err("No student with id " + id + " found ");
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(err).build());
         }
         return subjectService.StudentSubjects(id);
 
@@ -117,8 +122,9 @@ public class StudentRest {
             subjectService.addStudentSubject(studentId, subjectId);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+            Err err = new Err("No  id  found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No student with id " + studentId + " found ").build());
+                    .entity(err).build());
 
         }
 
@@ -131,8 +137,9 @@ public class StudentRest {
             subjectService.deleteStudentSubject(studentId, subjectId);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+            Err err = new Err("No  id  found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No student with id " + studentId + " found ").build());
+                    .entity(err).build());
 
         }
 

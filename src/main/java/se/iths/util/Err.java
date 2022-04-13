@@ -7,4 +7,5 @@ public class Err {
         this.message = message;
 
     }
+
 }
