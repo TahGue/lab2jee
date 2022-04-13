@@ -62,7 +62,7 @@ public class SubjectService {
         return student1.getSubjects();
     }
 
-    public void update(Subject subject) { entityManager.merge(subject); }
+    public void update(Long id, Subject subject) { entityManager.merge(subject); }
 
     public void delete(Long id) { entityManager.remove(getSubject(id)); }
 

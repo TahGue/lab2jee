@@ -1,6 +1,7 @@
 package se.iths.rest;
 
 
+import se.iths.entity.Student;
 import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
 import se.iths.service.SubjectService;
@@ -30,15 +31,33 @@ public class TeacherRest {
     }
 
     @GET
-    public List<Teacher> getAllTeachers() {
-        return teacherService.getAllTeachers();
+    public Response getAllTeachers() {
+        List<Teacher> foundTeacher = teacherService.getAllTeachers();
+        if (foundTeacher == null) {
+
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("The list of Teachers is empty").build());
+        }
+        return Response.ok(foundTeacher).build();
+
     }
 
     @GET
     @Path("{id}")
-    public Teacher getTeacher(@PathParam("id") Long id) {
+    public Response getTeacher(@PathParam("id") Long id)  {
+        Teacher teacher = teacherService.getTeacherById(id);
+        if (teacher == null) {
+            Err err = new Err ("No Teacher with id " + id + " found");
+            return  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(err)
+                    .build();
+        }
+        return Response .status(Response.Status.OK)
+                .entity(teacher)
+                .build();
 
-        return teacherService.getTeacherById(  id);
+
     }
 
     @POST
@@ -47,7 +66,7 @@ public class TeacherRest {
             teacherService.addTeacher(teacher);
             return Response.status(Response.Status.CREATED).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getLocalizedMessage()).build();
         }
     }
 
@@ -57,17 +76,22 @@ public class TeacherRest {
         try {
             teacherService.updateTeacher(id, teacher);
             return Response.status(Response.Status.OK).build();
-    } catch (
-    ConstraintViolationException e) {
-        return Response.status(Response.Status.BAD_REQUEST).build();
+    } catch (Exception error){
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity  ("No Teacher with id "  + id +  " found " ).build());
     }
     }
 
     @DELETE
     @Path("{id}")
     public Response deleteTeacher(@PathParam("id") Long id) {
-        teacherService.deleteTeacher(id);
-        return Response.status(Response.Status.OK).build();
+        try {
+            teacherService.deleteTeacher(id);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception error) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("No Teacher with id" + id + " found ").build());
+        }
     }
 
     @GET
