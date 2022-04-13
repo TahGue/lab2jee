@@ -28,14 +28,14 @@ public class StudentRest {
     }
 
     @GET
-    public Response getAllStudents() {
+    public List<Student> getAllStudents() {
         List<Student> foundStudent = studentService.getAllStudents();
         if (foundStudent == null) {
 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("The list of Student is empty").build());
         }
-        return Response.ok(foundStudent).build();
+        return (List<Student>) Response.ok(foundStudent).build();
 
     }
 
@@ -84,9 +84,9 @@ public class StudentRest {
             studentService.updateStudent(id, student);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
-
+            Err err = new Err("No student with id " + id + " found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No student with id " + id + " found ").build());
+                    .entity(err).build());
         }
     }
 
@@ -140,10 +140,7 @@ public class StudentRest {
             Err err = new Err("No  id  found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity(err).build());
-
         }
-
-
     }
 
 }

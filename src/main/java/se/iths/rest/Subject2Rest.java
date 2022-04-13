@@ -41,7 +41,8 @@ public class   Subject2Rest {
             subjectService.addSubject(subject);
             return Response.status(Response.Status.CREATED).entity(subject).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Something wont wrong").build();
+            Err err = new Err("Add a subject ");
+            return Response.status(Response.Status.BAD_REQUEST).entity(err).build();
         }
     }
 
@@ -51,6 +52,7 @@ public class   Subject2Rest {
             subjectService.update(subject);
             return Response.status(Response.Status.OK).entity(subject).build();
         } catch (ConstraintViolationException e) {
+            Err err = new Err("No  id   found ");
             return Response.status(Response.Status.BAD_REQUEST).entity("Something wont wrong").build();
         }
     }
@@ -61,6 +63,7 @@ public class   Subject2Rest {
             subjectService.delete(id);
             return Response.status(Response.Status.OK).build();
         } catch (ConstraintViolationException e) {
+            Err err = new Err("No subject with id " + id + " found ");
             return Response.status(Response.Status.BAD_REQUEST).entity("No Subject with id" + id + " found ").build();
         }
     }

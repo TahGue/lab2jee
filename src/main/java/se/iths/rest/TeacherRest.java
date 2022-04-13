@@ -29,14 +29,14 @@ public class TeacherRest {
         this.subjectService = subjectService;
     }
     @GET
-    public Response getAllTeachers() {
+    public List<Teacher> getAllTeachers() {
         List<Teacher> foundTeacher = teacherService.getAllTeachers();
         if (foundTeacher == null) {
 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                     .entity("The list of Teachers is empty").build());
         }
-        return Response.ok(foundTeacher).build();
+        return (List<Teacher>) Response.ok(foundTeacher).build();
 
     }
 
@@ -64,7 +64,8 @@ public class TeacherRest {
             teacherService.addTeacher(teacher);
             return Response.status(Response.Status.CREATED).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getLocalizedMessage()).build();
+            Err err = new Err("No teacher added ");
+            return Response.status(Response.Status.BAD_REQUEST).entity(err).build();
         }
     }
 
@@ -75,8 +76,9 @@ public class TeacherRest {
             teacherService.updateTeacher(id, teacher);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error){
+            Err err = new Err("No Teacher with id "  + id +  " found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity  ("No Teacher with id "  + id +  " found " ).build());
+                    .entity  (err).build());
         }
     }
 
@@ -87,8 +89,9 @@ public class TeacherRest {
             teacherService.deleteTeacher(id);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+            Err err = new Err("No Teacher with id "  + id +  " found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No Teacher with id" + id + " found ").build());
+                    .entity(err).build());
         }
     }
 
@@ -96,7 +99,8 @@ public class TeacherRest {
     @Path("{id}/subjects")
     public List<Subject> getTeacherSubjects(@PathParam("id") Long id) {
         if (id == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            Err err = new Err("No Teacher with id "  + id +  " found ");
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(err).build());
         }
         return subjectService.getTeacherSubjects(id);
     }
@@ -108,8 +112,9 @@ public class TeacherRest {
             subjectService.addTeacherSubject(teacherId, subjectId);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+            Err err = new Err("No  id  found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No Teacher with id" + teacherId + " found ").build());
+                    .entity(err).build());
         }
     }
 
@@ -120,8 +125,9 @@ public class TeacherRest {
             subjectService.addTeacherSubject(teacherId, subjectId);
             return Response.status(Response.Status.OK).build();
         } catch (Exception error) {
+            Err err = new Err("No  id  found ");
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No Teacher with id" + teacherId + " found ").build());
+                    .entity(err).build());
         }
     }
 
