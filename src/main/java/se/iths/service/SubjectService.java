@@ -62,15 +62,20 @@ public class SubjectService {
         return student1.getSubjects();
     }
 
-    public void update(Subject subject) { entityManager.merge(subject); }
+    public void update(Subject subject) {
+        entityManager.merge(subject);
+    }
 
-    public void delete(Long id) { entityManager.remove(getSubject(id)); }
+    public void delete(Long id) {
+        entityManager.remove(getSubject(id));
+    }
 
 
-
-    public void deleteTeacherSubject(Long id, Subject subject) { Teacher teacher1 = entityManager.find(Teacher.class, id);
+    public void deleteTeacherSubject(Long id, Subject subject) {
+        Teacher teacher1 = entityManager.find(Teacher.class, id);
         teacher1.addSubject(entityManager.find(Subject.class, subject));
-        entityManager.merge(teacher1); }
+        entityManager.merge(teacher1);
+    }
 
     public List<Subject> getSubjectsByTeacherId(Long id) {
         Teacher teacher1 = entityManager.find(Teacher.class, id);
@@ -81,32 +86,51 @@ public class SubjectService {
         Student student1 = entityManager.find(Student.class, id);
         return student1.getSubjects();
     }
-    public void addTeacherSubject(Long id, Subject subject) {
-        Teacher teacher1 = entityManager.find(Teacher.class, id);
-        teacher1.addSubject(entityManager.find(Subject.class, subject.getId()));
-        subject.addTeacher(teacher1);
-        entityManager.merge(subject);
+
+    public void addTeacherSubject(Long teacherId, Long subjectId) {
+        Teacher teachter = entityManager.find(Teacher.class, teacherId);
+
+        Subject subject = entityManager.find(Subject.class, subjectId);
+        subject.addTeacher(teachter);
+        entityManager.merge(teachter);
 
     }
 
-    public void addStudentSubject(Long id, Subject subject) {
-        Student student1 = entityManager.find(Student.class, id);
-        student1.addSubject(entityManager.find(Subject.class, subject.getId()));
-        subject.addStudent(student1);
+    public void addStudentSubject(Long studentId, Long subjectId) {
+        Student student = entityManager.find(Student.class, studentId);
+        Subject subject = entityManager.find(Subject.class, subjectId);
+        subject.addStudent(student);
+        entityManager.merge(student);
+    }
 
-        entityManager.merge(subject);
+
+    public void deleteStudentSubject (Long studentId, Long subjectId) {
+        Student student = entityManager.find(Student.class, studentId);
+
+        Subject subject = entityManager.find(Subject.class, subjectId);
+        student.removeSubject(subject);
 
     }
 
-    public void deleteStudentSubject(Long id, Subject subject) { Student student1 = entityManager.find(Student.class, id);
-        student1.addSubject(entityManager.find(Subject.class, subject));
-        entityManager.merge(student1); }
+    public void deleteTeacherSubject (Long teacherId, Long subjectId) {
+        Teacher teacher = entityManager.find(Teacher.class, teacherId);
 
-    public List<Subject> StudentSubjects(Long id) { Student student1 = entityManager.find(Student.class, id);
-        return student1.getSubjects(); }
-    public List<Subject> TeacherSubjects(Long id) { Teacher teacher1 = entityManager.find(Teacher.class, id);
-        return teacher1.getSubjects(); }
+        Subject subject = entityManager.find(Subject.class, subjectId);
+        teacher.removeSubject(subject);
+
     }
+
+    public List<Subject> StudentSubjects(Long id) {
+        Student student = entityManager.find(Student.class, id);
+        return student.getSubjects();
+    }
+
+    public List<Subject> TeacherSubjects(Long id) {
+        Teacher teacher = entityManager.find(Teacher.class, id);
+        return teacher.getSubjects();
+    }
+}
+
 
 
 

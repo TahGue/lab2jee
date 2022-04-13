@@ -41,7 +41,7 @@ public class   Subject2Rest {
             subjectService.addSubject(subject);
             return Response.status(Response.Status.CREATED).entity(subject).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Something wont wrong").build();
         }
     }
 
@@ -51,10 +51,9 @@ public class   Subject2Rest {
             subjectService.update(subject);
             return Response.status(Response.Status.OK).entity(subject).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Something wont wrong").build();
         }
     }
-
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
@@ -62,11 +61,10 @@ public class   Subject2Rest {
             subjectService.delete(id);
             return Response.status(Response.Status.OK).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("No Subject with id" + id + " found ").build();
         }
     }
 }
-
 
 
 

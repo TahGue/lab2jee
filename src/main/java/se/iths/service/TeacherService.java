@@ -1,7 +1,6 @@
 package se.iths.service;
 
 
-import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
 
 import javax.persistence.EntityManager;
@@ -38,4 +37,6 @@ public class TeacherService {
 
         entityManager.remove(entityManager.find(Teacher.class, id));
     }
+
+
 }
