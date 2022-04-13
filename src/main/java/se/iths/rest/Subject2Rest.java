@@ -3,7 +3,7 @@ package se.iths.rest;
 import se.iths.entity.Subject;
 import se.iths.service.StudentService;
 import se.iths.service.SubjectService;
-
+import se.iths.util.Err;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.*;

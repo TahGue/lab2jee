@@ -44,22 +44,29 @@ public class StudentRest {
                     .entity(err)
                     .build();
         }
-            return Response .status(Response.Status.OK)
-                     .entity(student)
-                     .build();
+        return Response.status(Response.Status.OK)
+                .entity(student)
+                .build();
 
 
     }
 
     @POST
     public Response addStudent(Student student) {
+
         try {
             studentService.addStudent(student);
-            return Response.status(Response.Status.CREATED).build();
-        } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+
+            return Response.ok(student).build();
+        } catch (ConstraintViolationException error) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("this name is used" + student.getFirstName() + "Insert a name").build());
+        } catch (Exception error) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("this email is used" + student.getEmail() + "Try to insert an other email ").build());
         }
     }
+
     @PUT
     @Path("/{id}")
     public Response updateStudent(@PathParam("id") Long id, Student student) {
@@ -67,7 +74,7 @@ public class StudentRest {
             studentService.updateStudent(id, student);
             return Response.status(Response.Status.OK).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("No student with id " + id + " found").build();
         }
     }
 
@@ -78,11 +85,9 @@ public class StudentRest {
             studentService.deleteStudent(id);
             return Response.status(Response.Status.OK).build();
         } catch (ConstraintViolationException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("No student with id " + id + " found").build();
         }
     }
-
-
 
     @GET
     @Path("{id}/subjects")
@@ -91,7 +96,6 @@ public class StudentRest {
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
             return subjectService.StudentSubjects(id);
-        
     }
 
     @PATCH
@@ -99,7 +103,7 @@ public class StudentRest {
     public Response addStudentSubject(@PathParam("id") Long id, Subject subject) {
 
         subjectService.addStudentSubject(id, subject);
-        return Response.status(Response.Status.CREATED).entity(subject).build();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
@@ -108,14 +112,6 @@ public class StudentRest {
         subjectService.deleteStudentSubject(id, subject);
         return Response.status(Response.Status.OK).build();
     }
-
-
-
-
-
-
-
-
 
 }
 

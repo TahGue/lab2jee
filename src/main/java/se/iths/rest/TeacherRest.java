@@ -5,7 +5,7 @@ import se.iths.entity.Subject;
 import se.iths.entity.Teacher;
 import se.iths.service.SubjectService;
 import se.iths.service.TeacherService;
-
+import se.iths.util.Err;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.*;
