@@ -1,4 +1,4 @@
-# lab1jee
+# lab2jee
 
 Tahar Guemir
 Endpoint Path                                                    Request Method     Function
